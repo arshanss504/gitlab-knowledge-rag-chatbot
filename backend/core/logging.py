@@ -1,8 +1,3 @@
-"""
-app/core/logging.py
-Logging configuration via structlog.
-"""
-
 import logging
 import sys
 

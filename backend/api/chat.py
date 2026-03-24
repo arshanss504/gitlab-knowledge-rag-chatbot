@@ -1,8 +1,3 @@
-"""
-app/api/chat.py
-/chat endpoint.
-"""
-
 from fastapi import APIRouter, HTTPException, status
 
 from backend.core.logging import get_logger

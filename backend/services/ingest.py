@@ -1,8 +1,3 @@
-"""
-app/services/ingest.py
-Data ingestion pipeline: Crawl → Chunk → Embed → Upsert to ChromaDB.
-"""
-
 import asyncio
 from typing import Dict, List, Optional
 

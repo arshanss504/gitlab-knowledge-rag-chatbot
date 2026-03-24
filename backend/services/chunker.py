@@ -1,8 +1,3 @@
-"""
-app/services/chunker.py
-Semantic chunking strategy for RAG.
-"""
-
 from dataclasses import dataclass
 from typing import List
 
@@ -28,10 +23,6 @@ def _estimate_tokens(text: str) -> int:
 
 
 def _split_by_paragraphs(text: str, max_tokens: int, overlap_tokens: int) -> List[str]:
-    """
-    Split text into token-bounded chunks at paragraph boundaries.
-    Adds one paragraph of overlap between consecutive chunks.
-    """
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
     chunks = []
     current_parts: List[str] = []
@@ -71,7 +62,6 @@ def _split_by_paragraphs(text: str, max_tokens: int, overlap_tokens: int) -> Lis
 
 
 def _split_by_sentences(text: str, max_tokens: int) -> List[str]:
-    """Fallback sentence-level splitter for very long paragraphs."""
     import re
 
     sentences = re.split(r"(?<=[.!?])\s+", text)

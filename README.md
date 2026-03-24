@@ -1,91 +1,35 @@
-# GitLab RAG Chatbot
+# GitLab RAG
 
-A Retrieval-Augmented Generation (RAG) chatbot for GitLab Handbook, docs, and direction content.
+Chat assistant over GitLab handbook, product direction, and selected docs. It crawls public pages, chunks and embeds them into Chroma, retrieves with the user question, and answers with Gemini. Session context lives in Redis.
 
-## Repository layout
+**Stack:** FastAPI, Chroma, Redis, Gemini (embeddings + chat), React (Vite).
 
-```
-gitlab-rag/
-├── backend/           # Python package (FastAPI routes, RAG pipeline, Chroma)
-├── frontend/          # React + Vite UI
-├── main.py            # FastAPI entry
-├── Dockerfile         # Production API image
-├── docker-compose.yml # Local dev: API + Redis
-├── render.yaml        # Render Blueprint (backend)
-└── requirements.txt
-```
+## Run locally
 
-## Local development
+1. `cp .env.example .env` and set `GEMINI_API_KEY` (from [Google AI Studio](https://aistudio.google.com/apikey)).
+2. Start API and Redis: `docker compose up --build`
+3. Frontend: `cd frontend && npm install && npm run dev`
 
-```bash
-cp .env.example .env
-# Set GEMINI_API_KEY in .env
+The app calls `http://localhost:8000` unless you set `VITE_API_URL` in `frontend/.env` (see `frontend/.env.example`).
 
-# Backend (with Redis via Docker)
-docker compose up --build
+## Deploy (Render + Vercel)
 
-# Frontend (separate terminal)
-cd frontend && npm install && npm run dev
-```
+**API (Render):** Docker build from repo root, port 8000. Mount a disk at `/app/chroma_db` and set `CHROMA_PERSIST_DIR=/app/chroma_db`. Add Redis and set `REDIS_URL` to its internal URL.
 
-The UI talks to `http://localhost:8000` by default. To point at another API, set `VITE_API_URL` in `frontend/.env` (see `frontend/.env.example`).
+| Variable | Notes |
+|----------|--------|
+| `GEMINI_API_KEY` | Required |
+| `CHROMA_PERSIST_DIR` | e.g. `/app/chroma_db` |
+| `REDIS_URL` | Redis connection string |
+| `CORS_ORIGINS` | Your Vercel URL(s), comma-separated |
+| `LOG_LEVEL` | e.g. `INFO` |
 
-## Production: Vercel (frontend) + Render (backend)
+**Frontend (Vercel):** Root directory `frontend`, build `npm run build`, output `dist`. Set `VITE_API_URL` to your Render URL (no trailing slash).
 
-### 1. Deploy the API on Render
+After deploy, use **Sync Docs** once in the UI so the vector store is populated. Confirm `GET /health` on the API returns 200.
 
-1. Push this repo to GitHub/GitLab.
-2. In [Render](https://render.com), **New → Blueprint** and connect the repo, or **New → Web Service** with **Docker**.
-3. Use the repo root; [`Dockerfile`](Dockerfile) builds the API. Port **8000**.
-4. Add a **persistent disk** mounted at **`/app/chroma_db`** (1 GB is enough to start).
-5. Create a **Redis** instance (Render Redis or external). Set **`REDIS_URL`** on the web service to the **Internal Redis URL** (or connection string your provider gives you).
-6. Set environment variables:
+## Ops
 
-| Variable | Example |
-|----------|---------|
-| `GEMINI_API_KEY` | Your Google AI Studio key |
-| `CHROMA_PERSIST_DIR` | `/app/chroma_db` |
-| `REDIS_URL` | From Redis service |
-| `LOG_LEVEL` | `INFO` |
-| `CORS_ORIGINS` | `https://your-app.vercel.app` (comma-separated if multiple) |
-
-7. Deploy and wait until **`/health`** returns 200.
-
-Optional: commit [`render.yaml`](render.yaml) and use **Blueprint** for a one-click skeleton; you still need to add **Redis** in the dashboard and set `REDIS_URL` if not defined in the blueprint.
-
-### 2. Deploy the frontend on Vercel
-
-1. **New Project** → import the same repo.
-2. Set **Root Directory** to **`frontend`**.
-3. Framework: Vite (auto). Build: `npm run build`, output: **`dist`**.
-4. Add environment variable:
-
-   - **`VITE_API_URL`** = `https://<your-render-service>.onrender.com` (no trailing slash)
-
-5. Deploy. Open the Vercel URL; the header should show **API Connected** if CORS and the API URL are correct.
-
-### 3. First-time indexing
-
-Open the live app and use **Sync Docs** once. Ingestion can take several minutes depending on Gemini quotas. Chroma data persists on the Render disk.
-
-### 4. Smoke test
-
-Open `https://<your-render-service>.onrender.com/health` in a browser or use `curl -sfS` against that URL. Manually verify chat and a few quick actions; check Render logs for errors or repeated `429` responses.
-
-## Operations
-
-- **Rotate API key:** Update `GEMINI_API_KEY` in Render → **Manual Deploy** to restart.
-- **Re-ingest:** Use **Sync Docs** in the UI; existing chunk IDs are skipped when possible (see `backend/services/ingest.py`).
-- **Clear vector store:** Remove the Chroma volume data only if you intend to re-embed everything (quota-heavy).
-
-## RAG pipeline (overview)
-
-```
-User Query → Redis memory → Embed query → Chroma retrieval → Gemini answer → Sources
-```
-
-## Key design notes
-
-- Semantic chunking, Gemini embeddings, Chroma cosine search, Gemini chat model for answers.
-- Conversation memory: Redis sliding window per `session_id`.
-- Incremental ingestion with chunk-level skip when IDs already exist in Chroma.
+- Rotate `GEMINI_API_KEY` in Render and redeploy.
+- **Sync Docs** re-runs ingestion; existing chunks are skipped when IDs match.
+- Clearing Chroma data forces a full re-embed (costly on API quota).

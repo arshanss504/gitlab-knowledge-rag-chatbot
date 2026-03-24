@@ -1,14 +1,7 @@
-"""
-backend/core/config.py
-Application settings and constants.
-"""
-
 from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-# ── Constants ────────────────────────────────────────────────────────────────
 
 GEMINI_EMBEDDING_MODEL = "models/gemini-embedding-001"
 GEMINI_CHAT_MODEL = "models/gemini-3.1-flash-lite-preview"
@@ -28,8 +21,6 @@ CRAWL_SOURCE_URLS = [
 ]
 
 
-# ── Environment-specific settings ────────────────────────────────────────────
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -38,14 +29,11 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    gemini_api_key: str = Field(..., description="Google Gemini API key")
+    gemini_api_key: str = Field(...)
     chroma_persist_dir: str = "./chroma_db"
     redis_url: str = ""
     log_level: str = "INFO"
-    cors_origins: str = Field(
-        default="",
-        description="Comma-separated allowed browser origins (e.g. https://myapp.vercel.app). Empty = allow all.",
-    )
+    cors_origins: str = Field(default="")
 
 
 @lru_cache(maxsize=1)

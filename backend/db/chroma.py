@@ -1,8 +1,3 @@
-"""
-app/db/chroma.py
-ChromaDB client wrapper.
-"""
-
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 

@@ -41,7 +41,6 @@ const DEMOS = {
   "remote work":  "GitLab is fully **all-remote** with team members in 65+ countries [Source 2].\n\n- **Async-first** — communicate across timezones by default [Source 2]\n- **Write everything down** — if it's not documented, it doesn't exist [Source 2]\n- **Results over hours** — output is measured, not time [Source 2]",
 };
 
-// ── API ───────────────────────────────────────────────────────────────────────
 async function apiChat(query) {
   const r = await fetch(`${API_BASE}/chat`, {
     method: "POST", headers: { "Content-Type": "application/json" },
@@ -58,7 +57,6 @@ async function apiIngest() {
   return r.json();
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 function Markdown({ text }) {
   const html = text
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
@@ -93,7 +91,6 @@ function TypingDots() {
   );
 }
 
-// ── CI/CD Generator ──────────────────────────────────────────────────────────
 const selectStyle = {
   width: "100%", padding: "6px 8px", fontSize: 12, fontFamily: "inherit",
   border: "1px solid #e4e4e7", borderRadius: 5, background: "#fff", color: "#111",
@@ -171,7 +168,6 @@ function CICDGenerator({ onGenerate, disabled }) {
   );
 }
 
-// ── Message ───────────────────────────────────────────────────────────────────
 function Message({ msg }) {
   const isUser = msg.role === "user";
 
@@ -221,7 +217,6 @@ function Message({ msg }) {
   );
 }
 
-// ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [messages, setMessages] = useState([{
     id: "welcome", role: "bot", isNew: false, sources: [],
@@ -311,7 +306,6 @@ export default function App() {
 
       <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden", background: "#fafafa" }}>
 
-        {/* HEADER */}
         <header style={{ height: 50, display: "flex", alignItems: "center", padding: "0 16px", gap: 10, background: "#fff", borderBottom: "1px solid #e4e4e7", flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -338,10 +332,8 @@ export default function App() {
           </div>
         </header>
 
-        {/* BODY */}
         <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-          {/* LEFT */}
           <div style={{ width: leftOpen ? 252 : 0, minWidth: leftOpen ? 252 : 0, overflow: "hidden", transition: "all .2s ease", borderRight: "1px solid #e4e4e7", background: "#fff", display: "flex", flexDirection: "column", flexShrink: 0 }}>
             <div style={{ padding: 14, flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
               <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", color: "#a1a1aa", marginBottom: 8 }}>Sources</div>
@@ -381,7 +373,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* CENTER */}
           <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0, background: "#fff" }}>
             <div ref={msgsRef} style={{ flex: 1, overflow: "auto", padding: "28px 32px" }}>
               <div style={{ maxWidth: 680, margin: "0 auto" }}>
@@ -408,7 +399,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* RIGHT */}
           <div style={{ width: rightOpen ? 236 : 0, minWidth: rightOpen ? 236 : 0, overflow: "hidden", transition: "all .2s ease", borderLeft: "1px solid #e4e4e7", background: "#fafafa", flexShrink: 0 }}>
             <div style={{ padding: 14, height: "100%", overflow: "auto", display: "flex", flexDirection: "column", gap: 14 }}>
               <div>

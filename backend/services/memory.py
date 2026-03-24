@@ -1,8 +1,3 @@
-"""
-app/services/memory.py
-Conversation memory — Redis if available, otherwise simple dict.
-"""
-
 import json
 from typing import Optional
 
@@ -73,7 +68,6 @@ class ConversationMemory:
         return "\n".join(lines)
 
     def get_previous_query(self, session_id: str) -> Optional[str]:
-        """Return the second-to-last user message for query expansion."""
         turns = self._get_turns(session_id)
         user_turns = [t for t in turns if t["role"] == "user"]
         if len(user_turns) >= 2:

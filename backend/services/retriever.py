@@ -1,8 +1,3 @@
-"""
-app/services/retriever.py
-Query embedding and vector search.
-"""
-
 from dataclasses import dataclass
 from typing import List, Optional
 

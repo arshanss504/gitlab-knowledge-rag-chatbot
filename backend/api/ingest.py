@@ -1,8 +1,3 @@
-"""
-app/api/ingest.py
-/ingest endpoint — trigger data ingestion.
-"""
-
 import asyncio
 
 from fastapi import APIRouter, status

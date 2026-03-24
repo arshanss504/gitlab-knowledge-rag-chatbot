@@ -1,8 +1,3 @@
-"""
-app/services/crawler.py
-Async web crawler for GitLab Handbook & Direction pages.
-"""
-
 import asyncio
 import re
 from dataclasses import dataclass, field
@@ -51,10 +46,6 @@ def _is_allowed_url(url: str) -> bool:
 
 
 def _extract_sections(soup: BeautifulSoup, base_url: str) -> list[dict]:
-    """
-    Walk the DOM and split content into heading-bounded sections.
-    Returns a list of {heading, level, text, anchor} dicts.
-    """
     sections = []
     current_heading = "Introduction"
     current_level = 1

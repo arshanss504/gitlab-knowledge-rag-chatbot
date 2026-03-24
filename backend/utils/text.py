@@ -1,20 +1,9 @@
-"""
-app/utils/text.py
-Text cleaning and normalisation helpers used across the pipeline.
-"""
-
 import hashlib
 import re
 import unicodedata
 
 
 def clean_text(text: str) -> str:
-    """
-    Normalise raw extracted text for embedding and storage.
-    - NFKC unicode normalisation
-    - Collapse excessive whitespace / blank lines
-    - Strip zero-width / invisible characters
-    """
     if not text:
         return ""
 
@@ -30,11 +19,9 @@ def clean_text(text: str) -> str:
 
 
 def make_chunk_id(source_url: str, chunk_index: int) -> str:
-    """Deterministic, stable chunk ID for idempotent upsert."""
     key = f"{source_url}::{chunk_index}"
     return hashlib.sha256(key.encode()).hexdigest()[:32]
 
 
 def content_hash(text: str) -> str:
-    """SHA-256 fingerprint for incremental update detection."""
     return hashlib.sha256(text.encode()).hexdigest()

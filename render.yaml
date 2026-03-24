@@ -1,9 +1,4 @@
-# Render Blueprint: deploy the FastAPI backend (Dockerfile at repo root).
-# After creating the service, add a Redis instance in the Render dashboard and set REDIS_URL
-# to the Internal Redis URL (or use External Redis URL).
-# Set CORS_ORIGINS to your Vercel URL, e.g. https://your-app.vercel.app
-#
-# https://render.com/docs/infrastructure-as-code
+# Render Blueprint: add Redis in dashboard, set REDIS_URL and CORS_ORIGINS.
 
 services:
   - type: web

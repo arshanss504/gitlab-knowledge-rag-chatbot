@@ -1,8 +1,3 @@
-"""
-app/api/health.py
-/health endpoint.
-"""
-
 from fastapi import APIRouter
 
 from backend.core.logging import get_logger

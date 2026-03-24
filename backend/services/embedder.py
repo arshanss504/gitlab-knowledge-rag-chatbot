@@ -1,14 +1,3 @@
-"""
-app/services/embedder.py
-Embedding generation using Google Gemini text-embedding-004.
-
-Features:
-- Async-friendly (runs sync SDK calls in executor)
-- Batched embedding for efficiency
-- Retry with exponential backoff on transient API errors
-- Task-type hints: RETRIEVAL_DOCUMENT for indexing, RETRIEVAL_QUERY for queries
-"""
-
 import asyncio
 from typing import List
 
@@ -40,10 +29,6 @@ def _configure_gemini():
     reraise=True,
 )
 def _embed_batch_sync(texts: List[str], task_type: str, model: str) -> List[List[float]]:
-    """
-    Synchronous batch embed. Wrapped by retry decorator.
-    task_type: "RETRIEVAL_DOCUMENT" | "RETRIEVAL_QUERY"
-    """
     result = genai.embed_content(
         model=model,
         content=texts,
@@ -53,32 +38,20 @@ def _embed_batch_sync(texts: List[str], task_type: str, model: str) -> List[List
 
 
 class EmbeddingService:
-    """
-    Wraps Gemini embedding API.
-    Always call embed_documents() for indexing, embed_query() for queries.
-    This distinction improves retrieval quality with Gemini's task-type optimisation.
-    """
-
     def __init__(self):
         _configure_gemini()
         self._model = GEMINI_EMBEDDING_MODEL
         logger.info("EmbeddingService ready", model=self._model)
 
     async def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        """
-        Embed a list of document chunks for indexing.
-        Processes in batches to stay within API limits.
-        """
         return await self._embed_in_batches(texts, task_type="RETRIEVAL_DOCUMENT")
 
     async def embed_query(self, query: str) -> List[float]:
-        """Embed a single user query for retrieval."""
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(
             None,
             lambda: _embed_batch_sync([query], "RETRIEVAL_QUERY", self._model),
         )
-        # Single item returns flat list
         return result if isinstance(result[0], float) else result[0]
 
     async def _embed_in_batches(
@@ -105,7 +78,6 @@ class EmbeddingService:
                 None,
                 lambda b=batch: _embed_batch_sync(b, task_type, self._model),
             )
-            # API returns List[List[float]] for multiple items, List[float] for one
             if isinstance(result[0], float):
                 all_embeddings.append(result)
             else:
@@ -114,7 +86,6 @@ class EmbeddingService:
         return all_embeddings
 
 
-# Module-level singleton — safe to import anywhere
 _embedder: EmbeddingService | None = None
 
 

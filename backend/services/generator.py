@@ -39,14 +39,7 @@ Help users understand GitLab — its culture, policies, product features, CI/CD,
 7. **Never fabricate** policies, team structures, or product features that don't exist.
    Stay within what you know to be true about GitLab.
 
-8. **Markdown code blocks (must follow exactly):**
-   - Open with THREE backtick characters, then the language name on the same line (e.g. bash or yaml).
-   - Close with a line that is ONLY three backtick characters. Do NOT use two backticks before "bash",
-     do NOT use a single trailing backtick, and do NOT mix styles between blocks.
-   - **GitLab REST URLs:** Always include the project id in the path. Valid pattern:
-     .../api/v4/projects/<PROJECT_ID>/protected_branches...
-     Never write .../projects//... (double slash with nothing between).
-   - **GET list URL:** .../api/v4/projects/<PROJECT_ID>/protected_branches (same path segment rules).
+8. **Code blocks:** Use standard markdown fences (three backticks + bash/yaml). GitLab REST URLs must include `<PROJECT_ID>` in `/api/v4/projects/<PROJECT_ID>/...` — never `projects//`.
 """
 
 CONTEXT_TEMPLATE = """
@@ -66,7 +59,6 @@ CONTEXT_TEMPLATE = """
 
 
 def _format_context_blocks(chunks: List[RetrievedChunk]) -> str:
-    """Format retrieved chunks as numbered source blocks for the prompt."""
     blocks = []
     for i, chunk in enumerate(chunks, 1):
         source_label = chunk.section if chunk.section else chunk.title
@@ -83,10 +75,6 @@ def _format_history_section(history_text: str) -> str:
 
 
 class GeneratorService:
-    """
-    Wraps Gemini 1.5 Flash for RAG answer generation.
-    """
-
     def __init__(self):
         genai.configure(api_key=get_settings().gemini_api_key)
         self._model = genai.GenerativeModel(
@@ -112,11 +100,6 @@ class GeneratorService:
         retrieved_chunks: List[RetrievedChunk],
         history_text: str = "",
     ) -> str:
-        """
-        Generate a grounded answer from retrieved context.
-
-        Returns the answer text. Sources are cited inline as [Source N].
-        """
         if not retrieved_chunks:
             return (
                 "I don't have enough information in the GitLab documentation to answer "
@@ -146,7 +129,6 @@ class GeneratorService:
         return answer
 
 
-# Module singleton
 _generator: GeneratorService | None = None
 
 
