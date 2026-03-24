@@ -1,0 +1,59 @@
+# Secrets and local env (never commit)
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local data (vector DB, embeddings — large and machine-specific)
+chroma_db/
+*.db
+*.sqlite3
+
+# Docker / logs
+*.log
+
+# Cursor / tooling
+.cursor/
+
+# Legacy / accidental paths (remove folder from repo if present)
+gitlab-rag-ui/
