@@ -6,7 +6,7 @@ Chat assistant over GitLab handbook, product direction, and selected docs. It cr
 
 ## Run locally
 
-1. `cp .env.example .env` and set `GEMINI_API_KEY` (from [Google AI Studio](https://aistudio.google.com/apikey)).
+1. `cp .env.example .env` and set **`GEMINI_API_KEY`** and **`GEMINI_CHAT_MODEL`** (see `.env.example` for the format; use any model id from [Google AI Studio](https://aistudio.google.com/), e.g. `models/gemini-3-flash-preview`).
 2. Start API and Redis: `docker compose up --build`
 3. Frontend: `cd frontend && npm install && npm run dev`
 
@@ -28,6 +28,7 @@ The app calls `http://localhost:8000` unless you set `VITE_API_URL` in `frontend
 | Variable | Value |
 |----------|--------|
 | `GEMINI_API_KEY` | From [Google AI Studio](https://aistudio.google.com/apikey) |
+| `GEMINI_CHAT_MODEL` | Required. Same as local, e.g. `models/gemini-3-flash-preview` |
 | `REDIS_URL` | Paste the Redis URL from step 4 |
 | `CHROMA_PERSIST_DIR` | `/app/chroma_db` |
 | `LOG_LEVEL` | `INFO` |

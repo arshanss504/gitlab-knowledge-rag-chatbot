@@ -22,13 +22,13 @@ async def health_check() -> dict:
         overall = "down"
 
     try:
-        from backend.core.config import GEMINI_CHAT_MODEL, get_settings
+        from backend.core.config import get_settings
 
         cfg = get_settings()
         has_key = bool(cfg.gemini_api_key and cfg.gemini_api_key != "your_gemini_api_key_here")
         components["gemini"] = {
             "status": "ok" if has_key else "degraded",
-            "model": GEMINI_CHAT_MODEL,
+            "model": cfg.gemini_chat_model,
         }
         if not has_key:
             overall = "degraded"

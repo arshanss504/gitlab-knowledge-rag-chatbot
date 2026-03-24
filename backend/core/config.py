@@ -4,7 +4,6 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 GEMINI_EMBEDDING_MODEL = "models/gemini-embedding-001"
-GEMINI_CHAT_MODEL = "models/gemini-3.1-flash-lite-preview"
 
 CONVERSATION_TTL_SECONDS = 3600
 CONVERSATION_MAX_TURNS = 6
@@ -30,6 +29,7 @@ class Settings(BaseSettings):
     )
 
     gemini_api_key: str = Field(...)
+    gemini_chat_model: str = Field(...)
     chroma_persist_dir: str = "./chroma_db"
     redis_url: str = ""
     log_level: str = "INFO"

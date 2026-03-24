@@ -5,7 +5,7 @@ import google.generativeai as genai
 from google.api_core.exceptions import ResourceExhausted
 from tenacity import retry, retry_if_not_exception_type, stop_after_attempt, wait_exponential
 
-from backend.core.config import GEMINI_CHAT_MODEL, get_settings
+from backend.core.config import get_settings
 from backend.core.logging import get_logger
 from backend.services.retriever import RetrievedChunk
 
@@ -76,9 +76,10 @@ def _format_history_section(history_text: str) -> str:
 
 class GeneratorService:
     def __init__(self):
-        genai.configure(api_key=get_settings().gemini_api_key)
+        cfg = get_settings()
+        genai.configure(api_key=cfg.gemini_api_key)
         self._model = genai.GenerativeModel(
-            model_name=GEMINI_CHAT_MODEL,
+            model_name=cfg.gemini_chat_model,
             system_instruction=SYSTEM_PROMPT,
             generation_config=genai.GenerationConfig(
                 temperature=0.2,
@@ -86,7 +87,7 @@ class GeneratorService:
                 max_output_tokens=4096,
             ),
         )
-        logger.info("GeneratorService ready", model=GEMINI_CHAT_MODEL)
+        logger.info("GeneratorService ready", model=cfg.gemini_chat_model)
 
     @retry(
         retry=retry_if_not_exception_type(ResourceExhausted),
