@@ -8,7 +8,6 @@ A Retrieval-Augmented Generation (RAG) chatbot for GitLab Handbook, docs, and di
 gitlab-rag/
 ├── backend/           # Python package (FastAPI routes, RAG pipeline, Chroma)
 ├── frontend/          # React + Vite UI
-├── scripts/           # CLI helpers, smoke tests
 ├── main.py            # FastAPI entry
 ├── Dockerfile         # Production API image
 ├── docker-compose.yml # Local dev: API + Redis
@@ -71,11 +70,7 @@ Open the live app and use **Sync Docs** once. Ingestion can take several minutes
 
 ### 4. Smoke test
 
-```bash
-API_URL=https://your-service.onrender.com ./scripts/smoke_prod.sh
-```
-
-Manually verify chat and a few quick actions; check Render logs for errors or repeated `429` responses.
+Open `https://<your-render-service>.onrender.com/health` in a browser or use `curl -sfS` against that URL. Manually verify chat and a few quick actions; check Render logs for errors or repeated `429` responses.
 
 ## Operations
 
