@@ -1,0 +1,31 @@
+# Render Blueprint: deploy the FastAPI backend (Dockerfile at repo root).
+# After creating the service, add a Redis instance in the Render dashboard and set REDIS_URL
+# to the Internal Redis URL (or use External Redis URL).
+# Set CORS_ORIGINS to your Vercel URL, e.g. https://your-app.vercel.app
+#
+# https://render.com/docs/infrastructure-as-code
+
+services:
+  - type: web
+    name: gitlab-rag-api
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CHROMA_PERSIST_DIR
+        value: /app/chroma_db
+      - key: REDIS_URL
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: CORS_ORIGINS
+        sync: false
+    disk:
+      name: chroma
+      mountPath: /app/chroma_db
+      sizeGB: 1
