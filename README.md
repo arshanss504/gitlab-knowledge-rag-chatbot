@@ -6,7 +6,7 @@ Chat assistant over GitLab handbook, product direction, and selected docs. It cr
 
 ## Run locally
 
-1. `cp .env.example .env` and set **`GEMINI_API_KEY`** and **`GEMINI_CHAT_MODEL`** (see `.env.example` for the format; use any model id from [Google AI Studio](https://aistudio.google.com/), e.g. `models/gemini-3-flash-preview`).
+1. `cp .env.example .env` and set **`GEMINI_API_KEY`** and **`GEMINI_CHAT_MODEL`** (see `.env.example` for the format; use any model id, e.g. `models/gemini-3-flash-preview`).
 2. Start API and Redis: `docker compose up --build`
 3. Frontend: `cd frontend && npm install && npm run dev`
 
