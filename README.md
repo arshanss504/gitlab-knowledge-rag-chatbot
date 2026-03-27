@@ -1,5 +1,7 @@
 # GitLab RAG
 
+[Documentation]{https://docs.google.com/document/d/e/2PACX-1vSBJy3HYUQu_r4bzd6ugita6qqHReOtlLbXAUuqmzh3OhV9kj78yuKAGU2BP1ur2U6w4L9NGvKmJyPj/pub}
+
 Chat assistant over GitLab handbook, product direction, and selected docs. It crawls public pages, chunks and embeds them into Chroma, retrieves with the user question, and answers with Gemini. Session context lives in Redis.
 
 **Stack:** FastAPI, Chroma, Redis, Gemini (embeddings + chat), React (Vite).
